@@ -103,9 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         alignment:Alignment.topCenter , //指定未定位或部分定位widget的对齐方式
         children: <Widget>[
-          Container(child: Text(tr('cmoney_test'),style: TextStyle(color: Colors.white),softWrap: true,),
-            color: Colors.lightBlue,
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.all( 10.0), //容器外填充,
+              padding: EdgeInsets.all( 10.0), //容器外填充,
+              child: Text(tr('cmoney_test'),style: TextStyle(color: Colors.white),softWrap: true,),
+              color: Colors.lightBlue,
+            ),
           ),
+
 
           Positioned.fill(
             child: Align(

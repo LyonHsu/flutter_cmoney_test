@@ -1,6 +1,9 @@
+
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:package_info/package_info.dart';
 
 String _appVersion = '0.0.0';
@@ -43,6 +46,7 @@ class _ParentWidgetState extends State<MenuStatefulWidget> {
   }
 
 
+
   void showMyMaterialDialog(BuildContext context) {
     showDialog(
         context: context,
@@ -60,6 +64,12 @@ class _ParentWidgetState extends State<MenuStatefulWidget> {
                 },
                 child: new Text(tr('ok')),
               ),
+              IconButton(
+                onPressed: (){
+                  send();
+                },
+                icon: Icon(Icons.mail),
+              )
             ],
           );
         });
@@ -73,5 +83,46 @@ class _ParentWidgetState extends State<MenuStatefulWidget> {
     setState(() {
       _appVersion = 'ver:$localVersion($buildNumber)';
     });
+  }
+
+  List<String> attachments = [];
+  bool isHTML = false;
+
+  final _recipientController = TextEditingController(
+    text: 'lejiteyu@gmail.com',
+  );
+
+  var _subjectController = TextEditingController(text: tr('app_name')+'The subject $_appVersion');
+
+  final _bodyController = TextEditingController(
+    text: 'Mail body.',
+  );
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> send() async {
+    _subjectController = TextEditingController(text: tr('app_name')+'The subject $_appVersion');
+    final Email email = Email(
+      body: _bodyController.text,
+      subject: _subjectController.text,
+      recipients: [_recipientController.text],
+      attachmentPaths: attachments,
+      isHTML: isHTML,
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'success';
+    } catch (error) {
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(platformResponse),
+    ));
   }
 }
