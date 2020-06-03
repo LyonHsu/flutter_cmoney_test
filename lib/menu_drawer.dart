@@ -1,9 +1,12 @@
 
 
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:email_launcher/email_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info/package_info.dart';
 
 String _appVersion = '0.0.0';
@@ -23,6 +26,12 @@ class _ParentWidgetState extends State<MenuStatefulWidget> {
     super.initState();
     initVersion();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return  ListView(
@@ -85,44 +94,38 @@ class _ParentWidgetState extends State<MenuStatefulWidget> {
     });
   }
 
-  List<String> attachments = [];
-  bool isHTML = false;
 
-  final _recipientController = TextEditingController(
-    text: 'lejiteyu@gmail.com',
-  );
 
-  var _subjectController = TextEditingController(text: tr('app_name')+'The subject $_appVersion');
-
-  final _bodyController = TextEditingController(
-    text: 'Mail body.',
-  );
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Future<void> send() async {
-    _subjectController = TextEditingController(text: tr('app_name')+'The subject $_appVersion');
-    final Email email = Email(
-      body: _bodyController.text,
-      subject: _subjectController.text,
-      recipients: [_recipientController.text],
-      attachmentPaths: attachments,
-      isHTML: isHTML,
-    );
-
-    String platformResponse;
-
-    try {
-      await FlutterEmailSender.send(email);
-      platformResponse = 'success';
-    } catch (error) {
-      platformResponse = error.toString();
+  void send() async {
+    List<String> to = ['lejiteyu@gmail.com'];
+    List<String> cc = [''];
+    List<String> bcc = [''];
+    String subject = tr('app_name') + ' ' + _appVersion;
+    String body = '';
+    if (Platform.isAndroid) {
+      Email email = Email(
+          to: to,
+          cc: cc,
+          bcc: bcc,
+          subject: subject,
+          body: body);
+      await EmailLauncher.launch(email);
+    }else if (Platform.isIOS) {
+      var mail = to[0];
+      var sub = subject.replaceAll(" ", "%20");
+      var boddy = body.replaceAll(" ", "%20");
+      var _launched = _openUrl('mailto:$mail?subject=$sub&body=$boddy');
     }
-
-    if (!mounted) return;
-
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
   }
+
+  Future<void> _launched;
+
+  Future<void> _openUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 }
