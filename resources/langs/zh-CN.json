@@ -1,0 +1,11 @@
+{
+  "title":"這是Lyon 開發的CMoney 測試！",
+  "ok": "確認",
+  "about_Me": "關於我",
+  "next_page": "下一頁",
+  "page_b_title": "我是B頁",
+  "back_front_page": "返回首頁",
+  "page_b": "GITHub",
+  "button1": "按鈕",
+  "cmoney_test": "實作題\\n\\n\n目標 base API: https://jsonplaceholder.typicode.com, end point: /photos\n做出兩個頁面,第一個頁面只需要有一個 Button 換場到下一個頁面。\\n\\n\n\n第二個頁面要把 API 的內容呈現，需要呈現的項目有三個,分別是 “id”, “title”, “thumbnailUrl”，Id 和 title 是 String，thumbnailUrl 是圖案的網址,要在 cell 內的 imageView 中呈現每一行放四個格子\n\\n\\n\n第三個頁面是點擊了第二個頁面後的任一格，推入下一頁，要呈現當格的背景圖、id、和 title\n\nUI 要能自動適應各尺寸大小的螢幕\n\\n\\n\n實作請使用 kotlin\n\\n\n禁止使用第三方套件\n除了上述指定 UI 條件之外,你也可以自行優化沒指定的 UI\n\\n\n完成後，請將原始碼寄回給我們，感謝"
+}
