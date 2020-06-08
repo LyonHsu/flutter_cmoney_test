@@ -1,12 +1,13 @@
+import 'package:cmoney/photos.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
 class CPage extends StatelessWidget{
-  String index="";
+  Photos photos;
 
-  CPage({this.index});
+  CPage({this.photos});
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +16,23 @@ class CPage extends StatelessWidget{
         title: Text(tr('page_c')),
 
       ),
-      body: PageStatefulWidget(title: tr('page_c'),index:index),
+      body: PageStatefulWidget(title: tr('page_c'),photos:photos),
     );
   }
 }
 
 
 class PageStatefulWidget extends StatefulWidget{
-  PageStatefulWidget({Key key, this.title,this.index}) : super(key: key);
+  PageStatefulWidget({Key key, this.title,this.photos}) : super(key: key);
   final String title;
-  String index="";
+  Photos photos;
   @override
-  _ParentWidgetState createState() => new _ParentWidgetState(index:index);
+  _ParentWidgetState createState() => new _ParentWidgetState(photos:photos);
 }
 
 class _ParentWidgetState extends State<PageStatefulWidget>{
-  String index="";
-  _ParentWidgetState({this.index});
+  Photos photos;
+  _ParentWidgetState({this.photos});
   @override
   Widget build(BuildContext context) {
     return getAdapter();
@@ -66,13 +67,13 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
     Widget widget =
     new Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment:CrossAxisAlignment.stretch,
         children: [
           Expanded(
             flex :2,
             child: Image.network(
-              'https://titangene.github.io/images/cover/flutter.jpg',
+              '${photos.thumbnailUrl}',
               fit:BoxFit.fill,
               width: 100.0,
               height: 100.0,
@@ -100,7 +101,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                         margin: EdgeInsets.all( 1.0), //容器外填充
                         color: Colors.purple,
                         child: new Text(
-                          "Item " + index.toString(),
+                          "id : " + photos.id.toString(),
                           style: new TextStyle(fontSize: 22.0,
                               color: const Color(0xFF000000),
                               fontWeight: FontWeight.w200,
@@ -111,7 +112,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                         margin: EdgeInsets.all( 1.0), //容器外填充
                         color: Colors.lightGreen,
                         child: new Text(
-                          "Item 2" + index.toString(),
+                          "title : " + photos.title.toString(),
                           style: new TextStyle(fontSize: 22.0,
                               color: const Color(0xFF000000),
                               fontWeight: FontWeight.w200,
@@ -123,7 +124,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                           margin: EdgeInsets.all( 1.0), //容器外填充
                           color: Colors.yellow,
                           child: new Text(
-                            "Item 3 " + index.toString(),
+                            "thumbnailUrl : " + photos.thumbnailUrl.toString(),
                             style: new TextStyle(fontSize: 22.0,
                                 color: const Color(0xFF000000),
                                 fontWeight: FontWeight.w200,

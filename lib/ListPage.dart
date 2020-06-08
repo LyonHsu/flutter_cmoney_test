@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:cmoney/photos.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'CPage.dart';
+import 'PhotosList.dart';
 
 class ListPage extends StatelessWidget{
 
@@ -38,26 +43,33 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    initData();
+    getData();
   }
 
-  void initData(){
-
+  BaseOptions options = new BaseOptions(
+    baseUrl: "https://jsonplaceholder.typicode.com/photos",
+    connectTimeout: 5000,
+    receiveTimeout: 3000,
+  );
+  List photoList = new List();
+  void getData() async{
+    try {
+      Response response = await Dio(options).get(options.baseUrl);
+      List list = new PhotosList.fromJson(response.data).photoslist;
+      setState(() {
+        this.photoList = list;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
-  _gotoNextPage(String i){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CPage(index:i)));
+  _gotoNextPage(Photos photos){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CPage(photos:photos)));
   }
 
-  int value = 2;
 
-  _addItem() {
-    setState(() {
-      value = value + 1;
-    });
-  }
-
-  _buildRow(int index) {
+  _buildRow(Photos photos) {
     return
       Container(
         margin: EdgeInsets.all( 10.0), //容器外填充
@@ -66,8 +78,8 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
       child:
       InkWell(
           onTap : (){
-            print('go to the page C ${index.toString()}');
-              _gotoNextPage(index.toString());
+            print('go to the page C ${photos.title}');
+              _gotoNextPage(photos);
           },
           child:new Row(
             /**
@@ -83,7 +95,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                 Expanded(
                   flex :1,
                   child: Image.network(
-                    'https://titangene.github.io/images/cover/flutter.jpg',
+                    '${photos.url}',
                     fit:BoxFit.fill,
                     width: 100.0,
                     height: 100.0,
@@ -111,7 +123,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                               margin: EdgeInsets.all( 1.0), //容器外填充
                               color: Colors.purple,
                               child: new Text(
-                                "Item " + index.toString(),
+                                "id :" + photos.id.toString(),
                                 style: new TextStyle(fontSize: 22.0,
                                     color: const Color(0xFF000000),
                                     fontWeight: FontWeight.w200,
@@ -122,7 +134,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                               margin: EdgeInsets.all( 1.0), //容器外填充
                               color: Colors.lightGreen,
                               child: new Text(
-                                "Item 2" + index.toString(),
+                                "title :" + photos.title.toString(),
                                 style: new TextStyle(fontSize: 22.0,
                                     color: const Color(0xFF000000),
                                     fontWeight: FontWeight.w200,
@@ -134,7 +146,7 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
                                 margin: EdgeInsets.all( 1.0), //容器外填充
                                 color: Colors.yellow,
                                 child: new Text(
-                                  "Item 3 " + index.toString(),
+                                  "thumbnailUrl 3 " + photos.thumbnailUrl.toString(),
                                   style: new TextStyle(fontSize: 22.0,
                                       color: const Color(0xFF000000),
                                       fontWeight: FontWeight.w200,
@@ -157,12 +169,12 @@ class _ParentWidgetState extends State<PageStatefulWidget>{
     Widget widget =
     new Scaffold(
       body: ListView.builder(
-          itemCount: this.value,
-          itemBuilder: (context, index) => this._buildRow(index)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
-        child: Icon(Icons.add),
-      ),
+          itemCount: this.photoList.length,
+          itemBuilder: (context, index) => this._buildRow(photoList[index])),
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: ,
+//        child: Icon(Icons.add),
+//      ),
     );
         return widget;
   }

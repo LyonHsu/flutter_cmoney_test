@@ -1,4 +1,4 @@
-name: CMoney
+name: cmoney
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -41,9 +41,23 @@ dependencies:
   email_launcher: ^1.0.0  #android
   url_launcher: ^5.4.10   #iOS
 
+  # JSON Parsing
+  json_annotation: ^3.0.0  # JSON 序列化的輔助之一，定義 JSON key-value 和物件屬性間的對應轉換，看到 @ 這個符號開頭就是照套件提供的函數
+
+  #使用icon
+  flutter_launcher_icons: ^0.7.2
+
+  #http download
+  dio: ^3.0.9
+ 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # JSON Parsing
+  build_runner: ^1.0.0  #JSON 序列化(json_serializable)的輔助之一，自動生成程式碼的工具
+  json_serializable: ^3.2.0  #JSON 序列化的主體，提供主要的轉換功能，讓你可以自由的從 JSON 字串轉換成自定義的物件。
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,6 +77,10 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "resources/images/lyonhsu3_t.png"
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -88,3 +106,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
